@@ -59,12 +59,18 @@ public class NFAToDFA {
                         (a, b) -> {
                             return mergeCharMap(a, b);
                         });
+        Set<Character> keySet = new HashSet<>();
+        keySet.addAll(transitionMap.keySet());
+        keySet.retainAll(NFA.finalStates);
+        if (!keySet.isEmpty()) {
+            DFA.finalStates.add(stateString);
+        }
         DFA.transitions.putIfAbsent(stateString, new HashMap<>());
         for (Character key : transitionMap.keySet()) {
             Set<String> tmp = transitionMap.get(key);
             String tmpString = packStates(tmp);
             DFA.transitions.get(stateString).put(key, Collections.singleton(tmpString));
-            if (visited.contains(tmpString)) continue;
+            if (visited.contains(tmpString) || tmpString.isEmpty()) continue;
             else {
                 visited.add(tmpString);
                 toVisit.add(tmpString);
@@ -76,7 +82,7 @@ public class NFAToDFA {
 
 
     private static String packStates(Set<String> states) {
-        String test = states.stream().sorted().reduce("", (a, b) -> {
+        String test = states.stream().sorted().filter(c -> !c.equals("_")).reduce("", (a, b) -> {
             return a.equals("") ? b : a + "," + b;
         });
         return test;
