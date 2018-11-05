@@ -115,9 +115,19 @@ public class Automaton {
     public void getNodes(String from, Character input, Set<String> states, Map<String, MutableNode> nodes) {
         System.out.printf("3: %s %s %s\n", from, input, states);
         nodes.putIfAbsent(from, mutNode(from));
-        states.stream().filter(c -> !c.equals(emptySymbol)).forEach(c -> {
-            nodes.get(from).addLink(to(node(c)).with(Label.of(""+input)));
-            System.out.println("4: "+c);
+        states.stream().filter(to -> !to.equals(emptySymbol)).forEach(to -> {
+            // Find before inserting
+            Optional<Link> tmp = nodes.get(from).links().stream().filter(l -> {
+                Boolean p = l.asLinkSource().toString().contains(to);
+                return p;
+            }).findAny();
+            if (tmp.isPresent()) {
+                String label = (String) tmp.get().attrs().get("label").toString();
+                tmp.get().attrs().add("label",label+","+input );
+            }else {
+                nodes.get(from).addLink(to(node(to)).with(Label.of("" + input)));
+            }
+            System.out.println("4: "+to);
         });
 //        nodes.get(from).addLink(states.stream().filter(c -> !c.equals(emptySymbol)).toArray(String[]::new));
     }
