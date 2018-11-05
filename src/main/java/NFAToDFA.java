@@ -21,16 +21,6 @@ public class NFAToDFA {
         return DFA;
     }
 
-    public static void explore() {
-        String stateString = toVisit.poll();
-        visited.add(stateString);
-        DFA.transitions.putIfAbsent(stateString, new HashMap<>());
-        String[] parsedStates = stateString.split(",");
-        for (String state : parsedStates) {
-            exploreSingle(stateString, state);
-        }
-    }
-
     // Queue: a,b,c,d,e TODO Set?
     public static Map<Character, Set<String>> mergeCharMap(Map<Character, Set<String>> a, Map<Character, Set<String>> b) {
         Map<Character, Set<String>> c = new HashMap<>();
@@ -55,7 +45,7 @@ public class NFAToDFA {
         Map<Character, Set<String>> transitionMap = new HashMap<>();
         List<String> states = Arrays.stream(stateString.split(",")).collect(Collectors.toList());
         transitionMap = states.stream()
-                .map(c -> NFA.transitions.get(""+c))
+                .map(c -> NFA.transitions.get("" + c))
                 .reduce(transitionMap,
                         (a, b) -> {
                             return mergeCharMap(a, b);
@@ -89,39 +79,6 @@ public class NFAToDFA {
         return test;
     }
 
-    private static void exploreSingle(String fullState, String subState) {
-        Map<Character, Set<String>> transitions = NFA.transitions.get(subState);
-        if (transitions != null) {
-            for (Character transition : transitions.keySet()) {
-                Set<String> toStates = NFA.transitions.get(subState).get(transition);
-                String packedStates = packStates(toStates);
-                if (!visited.contains(packedStates)) {
-                    visited.add(packedStates);
-                    toVisit.add(packedStates);
-                }
-                DFA.transitions.get(fullState).putIfAbsent(transition, new HashSet<>());
-                DFA.transitions.get(fullState).get(transition).add(packedStates);
-            }
-        }
-    }
-
-    public static void explore(String stateString) {
-        String[] parsedStates = stateString.split(",");
-        for (String state : parsedStates) {
-            Map<Character, Set<String>> states = NFA.transitions.get(state);
-            for (Character character : states.keySet()) {
-                Set<String> toStates = NFA.transitions.get(state).get(character);
-                String test = toStates.stream().sorted().reduce("", (a, b) -> {
-                    return a.equals("") ? b : a + b;
-                });
-                transitionMap.putIfAbsent(test, new HashMap<>());
-                for (String toState : toStates) {
-                    System.out.println(state + " " + character + " " + toState);
-                    toVisit.add(toState);
-                }
-            }
-        }
-    }
 
     public static void reset() {
         toVisit = new LinkedList<>();

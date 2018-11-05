@@ -39,23 +39,6 @@ public class Automaton {
         transitions = new HashMap<>();
     }
 
-
-    public void parseAlphabet(String input) {
-        alphabet = Arrays.stream(input.split("\\s"))
-                .map(c -> c.charAt(0))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-    }
-
-    // a b c d e f g
-    // *q1 q0 q1 q2 q3 q4 q5 q6
-    // q1 {q0 q1 q2 q3} q1 q2 q3 q4 q5 q6
-    public void parseTransitionTable(List<String> lines) {
-        for (String line : lines) {
-
-        }
-    }
-
-
     public void parseTransitionFunctionsRegex(List<String> lines) {
         Pattern pattern = Pattern.compile("(->|\\*)?\\s*(\\w*)\\s*(\\w*)\\s*(\\w*)");
         for (String c : lines) {
@@ -95,7 +78,7 @@ public class Automaton {
         Graphviz.fromGraph(graph).height(1000).render(Format.PNG).toFile(tmpImage);
         Desktop desktop = Desktop.getDesktop();
         desktop.open(tmpImage);
-      tmpImage.deleteOnExit();
+        tmpImage.deleteOnExit();
     }
 
     //node("a").link(to(node("b")).with(Label.of("Test"))),
@@ -104,7 +87,7 @@ public class Automaton {
         List<Node> nodes = getNodes();
         Graph g = graph("example2").directed()
                 .graphAttr().with(RankDir.LEFT_TO_RIGHT);
-        for (Node node : nodes){
+        for (Node node : nodes) {
             g = g.with(node);
         }
         return g;

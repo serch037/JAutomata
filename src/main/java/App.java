@@ -8,6 +8,8 @@ import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.model.Node;
 
 import java.awt.*;
@@ -16,29 +18,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static guru.nidi.graphviz.model.Factory.*;
+
 public class App {
     public String getGreeting() {
         return "Hello world.";
     }
 
     public static void main(String[] args) throws IOException {
-        Node
-                node4 = node("").with(Shape.POINT).link(to(node("a")).with(Label.of("Test"))),
-                node0 = node("a").link(to(node("b")).with(Label.of("Test"))),
-                node1 = node("b").link(to(node("c")).with(Label.of("Test"))),
-                node2 = node("b").link(to(node("a")).with(Label.of("Test"))),
-                node3 = node("d").with(Shape.DOUBLE_CIRCLE).link(to(node("c")).with(Label.of("Test")));
-        ArrayList<Node> nodes= new ArrayList<>();
-        nodes.add(node0);
-        nodes.add(node1);
-        nodes.add(node2);
-        nodes.add(node3);
-        nodes.add(node4);
-        Graph g = graph("example2").directed()
-                .graphAttr().with(RankDir.LEFT_TO_RIGHT);
-        for (Node node : nodes){
-            g = g.with(node);
+        // Mutable approach
+        ArrayList <MutableNode> nodes = new ArrayList<>();
+        nodes.add(mutNode("a"));
+        nodes.add(mutNode("d"));
+        nodes.add(mutNode("e").addLink(nodes.get(0), nodes.get(1)));
+        nodes.add(mutNode("a").addLink(to(node("b"))).addLink(to(node("c"))));
+
+
+        MutableGraph g = mutGraph("example2").setDirected(true);
+        for( MutableNode node : nodes) {
+            g.add(node);
         }
+
+        // Immutable approach
+        ArrayList <Node> nodes1 = new ArrayList<>();
+        nodes1.add(node("e").link(to(node("b"))).link(to(node("c"))));
+        nodes1.add(node("b").link(to(node("a"))));
+        nodes1.add(node("a").link(nodes.get(0), nodes.get(1)));
+
+
+        Graph g1 = graph("example2").directed();
+        for( Node node : nodes1) {
+            g1 = g1.with(node);
+        }
+
         File tmpImage = File.createTempFile("tmp", ".png", new File("images/"));
         Graphviz.fromGraph(g).height(1000).render(Format.PNG).toFile(tmpImage);
         Desktop desktop = Desktop.getDesktop();
