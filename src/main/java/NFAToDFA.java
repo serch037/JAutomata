@@ -17,7 +17,6 @@ public class NFAToDFA {
         while (!toVisit.isEmpty()) {
             exploreUnion();
         }
-        System.out.println("Stop");
         return DFA;
     }
 
@@ -36,7 +35,6 @@ public class NFAToDFA {
             if (b != null && b.get(key) != null)
                 c.get(key).addAll(b.getOrDefault(key, null));
         }
-        System.out.println(a);
         return c;
     }
 
@@ -67,8 +65,6 @@ public class NFAToDFA {
                 toVisit.add(tmpString);
             }
         }
-        System.out.println(transitionMap);
-        System.out.println("Done");
     }
 
 

@@ -42,6 +42,7 @@ public class App {
         ArrayList <Node> nodes1 = new ArrayList<>();
         nodes1.add(node("e").link(to(node("b"))).link(to(node("c"))));
         nodes1.add(node("b").link(to(node("a"))));
+        nodes1.add(node("d").link("a", "b"));
         nodes1.add(node("a").link(nodes.get(0), nodes.get(1)));
 
 
@@ -51,7 +52,7 @@ public class App {
         }
 
         File tmpImage = File.createTempFile("tmp", ".png", new File("images/"));
-        Graphviz.fromGraph(g).height(1000).render(Format.PNG).toFile(tmpImage);
+        Graphviz.fromGraph(g1).height(1000).render(Format.PNG).toFile(tmpImage);
         Desktop desktop = Desktop.getDesktop();
         desktop.open(tmpImage);
         tmpImage.deleteOnExit();

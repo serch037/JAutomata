@@ -31,6 +31,7 @@ public class Automaton {
     // ∂(qo, €) = {q1, q2}
     Map<String, Map<Character, Set<String>>> transitions;
 
+
     public Automaton() {
         alphabet = new LinkedHashSet<>();
         states = new HashSet<>();
@@ -93,26 +94,27 @@ public class Automaton {
         return g;
     }
 
+
     public List<Node> getNodes() {
         return transitions.entrySet().stream().flatMap(c -> {
+            System.out.println("1: "+c);
             return getNodes(c.getKey());
         }).collect(Collectors.toList());
     }
 
     public Stream<Node> getNodes(String state) {
         return transitions.get(state).entrySet().stream()
-                .flatMap(c -> {
-//                    System.out.printf("State: %s Key: %s Value %s\n", state,c.getKey(), c.getValue());
+                .map(c -> {
+                    System.out.println("2: "+c);
                     return getNodes(state, c.getKey(), c.getValue());
                 });
     }
 
     //node("a").link(to(node("b")).with(Label.of("Test"))),
-    public Stream<Node> getNodes(String from, Character input, Set<String> states) {
-        return states.stream().filter(c -> !c.equals(emptySymbol)).map(c -> {
-            System.out.printf("State: %s Key: %s Value %s\n", from, input, c);
-            return node(from).link(to(node(c)).with(Label.of("" + input)));
-        });
+    public Node getNodes(String from, Character input, Set<String> states) {
+        System.out.printf("3: %s %s %s\n", from, input, states);
+        return node(from)
+                .link(states.stream().filter(c -> !c.equals(emptySymbol)).toArray(String[]::new));
     }
 
     public static void main(String[] args) throws IOException {
