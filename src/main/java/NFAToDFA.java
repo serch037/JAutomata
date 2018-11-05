@@ -12,6 +12,7 @@ public class NFAToDFA {
         reset();
         NFA = anNFA;
         DFA.initialState = NFA.initialState;
+        DFA.emptySymbol = "";
         toVisit.add(NFA.initialState);
         visited.add(NFA.initialState);
         while (!toVisit.isEmpty()) {

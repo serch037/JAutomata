@@ -20,7 +20,7 @@ import static guru.nidi.graphviz.model.Factory.*;
 public class Automaton {
 
     static Scanner scanner = new Scanner(System.in);
-    static String emptySymbol = "_";
+    String emptySymbol = "_";
     LinkedHashSet<Character> alphabet;
     Set<String> states;
     Set<String> finalStates;
@@ -160,7 +160,8 @@ public class Automaton {
         test.parseTransitionFunctionsRegex(fs);
         //System.out.println("Done");
         test.viewAutomaton();
-        //test.toDFA();
+        Automaton DFA = test.toDFA();
+        DFA.viewAutomaton();
     }
 
 }
