@@ -2,8 +2,7 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.RankDir;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.model.Graph;
-import guru.nidi.graphviz.model.Node;
+import guru.nidi.graphviz.model.*;
 
 import java.awt.*;
 import java.io.File;
@@ -85,36 +84,42 @@ public class Automaton {
     //node("a").link(to(node("b")).with(Label.of("Test"))),
     public Graph createGraph() {
         //getNodes(this.initialState);
-        List<Node> nodes = getNodes();
+        List<MutableNode> nodes = getNodes();
         Graph g = graph("example2").directed()
                 .graphAttr().with(RankDir.LEFT_TO_RIGHT);
-        for (Node node : nodes) {
+        for (MutableNode node : nodes) {
             g = g.with(node);
         }
         return g;
     }
 
 
-    public List<Node> getNodes() {
-        return transitions.entrySet().stream().flatMap(c -> {
+    public List<MutableNode> getNodes() {
+        Map<String, MutableNode> nodes = new HashMap<>();
+        transitions.entrySet().stream().forEach(c -> {
             System.out.println("1: "+c);
-            return getNodes(c.getKey());
-        }).collect(Collectors.toList());
+            getNodes(c.getKey(), nodes);
+        });
+        return new ArrayList<>(nodes.values());
     }
 
-    public Stream<Node> getNodes(String state) {
-        return transitions.get(state).entrySet().stream()
-                .map(c -> {
+    public void getNodes(String state, Map<String, MutableNode> nodes) {
+        transitions.get(state).entrySet().stream()
+                .forEach(c -> {
                     System.out.println("2: "+c);
-                    return getNodes(state, c.getKey(), c.getValue());
+                    getNodes(state, c.getKey(), c.getValue(), nodes);
                 });
     }
 
     //node("a").link(to(node("b")).with(Label.of("Test"))),
-    public Node getNodes(String from, Character input, Set<String> states) {
+    public void getNodes(String from, Character input, Set<String> states, Map<String, MutableNode> nodes) {
         System.out.printf("3: %s %s %s\n", from, input, states);
-        return node(from)
-                .link(states.stream().filter(c -> !c.equals(emptySymbol)).toArray(String[]::new));
+        nodes.putIfAbsent(from, mutNode(from));
+        states.stream().filter(c -> !c.equals(emptySymbol)).forEach(c -> {
+            nodes.get(from).addLink(to(node(c)).with(Label.of(""+input)));
+            System.out.println("4: "+c);
+        });
+//        nodes.get(from).addLink(states.stream().filter(c -> !c.equals(emptySymbol)).toArray(String[]::new));
     }
 
     public static void main(String[] args) throws IOException {
