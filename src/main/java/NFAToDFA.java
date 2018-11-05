@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NFAToDFA {
     static Queue<String> toVisit;
@@ -32,7 +33,6 @@ public class NFAToDFA {
 
     // Queue: a,b,c,d,e TODO Set?
     public static Map<Character, Set<String>> mergeCharMap(Map<Character, Set<String>> a, Map<Character, Set<String>> b) {
-//        System.out.println(a);
         Map<Character, Set<String>> c = new HashMap<>();
         Set<Character> keys = new HashSet<>();
         if (a != null)
@@ -53,14 +53,15 @@ public class NFAToDFA {
     public static void exploreUnion() {
         String stateString = toVisit.poll();
         Map<Character, Set<String>> transitionMap = new HashMap<>();
-        transitionMap = Arrays.stream(stateString.split(","))
-                .map(c -> NFA.transitions.get(c))
+        List<String> states = Arrays.stream(stateString.split(",")).collect(Collectors.toList());
+        transitionMap = states.stream()
+                .map(c -> NFA.transitions.get(""+c))
                 .reduce(transitionMap,
                         (a, b) -> {
                             return mergeCharMap(a, b);
                         });
-        Set<Character> keySet = new HashSet<>();
-        keySet.addAll(transitionMap.keySet());
+        Set<String> keySet = new HashSet<>();
+        keySet.addAll(states);
         keySet.retainAll(NFA.finalStates);
         if (!keySet.isEmpty()) {
             DFA.finalStates.add(stateString);

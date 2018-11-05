@@ -1,12 +1,21 @@
-import javafx.collections.transformation.SortedList;
+import guru.nidi.graphviz.attribute.Label;
+import guru.nidi.graphviz.attribute.RankDir;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.Node;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static guru.nidi.graphviz.model.Factory.*;
 
 
 public class Automaton {
@@ -80,13 +89,50 @@ public class Automaton {
         return NFAToDFA.convert(this);
     }
 
-    public void viewAutomaton(){
-        //Desktop.getDesktop().open();
+    public void viewAutomaton() throws IOException {
+        Graph graph = createGraph();
+        File tmpImage = File.createTempFile("tmp", ".png", new File("images/"));
+        Graphviz.fromGraph(graph).height(1000).render(Format.PNG).toFile(tmpImage);
+        Desktop desktop = Desktop.getDesktop();
+        desktop.open(tmpImage);
+      tmpImage.deleteOnExit();
     }
 
+    //node("a").link(to(node("b")).with(Label.of("Test"))),
+    public Graph createGraph() {
+        //getNodes(this.initialState);
+        List<Node> nodes = getNodes();
+        Graph g = graph("example2").directed()
+                .graphAttr().with(RankDir.LEFT_TO_RIGHT);
+        for (Node node : nodes){
+            g = g.with(node);
+        }
+        return g;
+    }
 
+    public List<Node> getNodes() {
+        return transitions.entrySet().stream().flatMap(c -> {
+            return getNodes(c.getKey());
+        }).collect(Collectors.toList());
+    }
 
-    public static void main(String[] args) {
+    public Stream<Node> getNodes(String state) {
+        return transitions.get(state).entrySet().stream()
+                .flatMap(c -> {
+//                    System.out.printf("State: %s Key: %s Value %s\n", state,c.getKey(), c.getValue());
+                    return getNodes(state, c.getKey(), c.getValue());
+                });
+    }
+
+    //node("a").link(to(node("b")).with(Label.of("Test"))),
+    public Stream<Node> getNodes(String from, Character input, Set<String> states) {
+        return states.stream().filter(c -> !c.equals(emptySymbol)).map(c -> {
+            System.out.printf("State: %s Key: %s Value %s\n", from, input, c);
+            return node(from).link(to(node(c)).with(Label.of("" + input)));
+        });
+    }
+
+    public static void main(String[] args) throws IOException {
         Automaton test = new Automaton();
         //test.parseAlphabet("a b c d e f g");
         String f1 = "->a 0 a";
@@ -112,8 +158,9 @@ public class Automaton {
         List<String> fs = new ArrayList<>(Arrays.asList(tmp));
         //test.parseTransitionFunctions(fs);
         test.parseTransitionFunctionsRegex(fs);
-        System.out.println("Done");
-        test.toDFA();
+        //System.out.println("Done");
+        test.viewAutomaton();
+        //test.toDFA();
     }
 
 }

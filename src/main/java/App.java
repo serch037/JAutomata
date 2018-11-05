@@ -8,9 +8,12 @@ import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.Node;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static guru.nidi.graphviz.model.Factory.*;
 public class App {
@@ -19,17 +22,28 @@ public class App {
     }
 
     public static void main(String[] args) throws IOException {
-        Graph g = graph("example1").directed()
-                .graphAttr().with(RankDir.LEFT_TO_RIGHT)
-                .with(
-
-                        node("").with(Shape.POINT).link(to(node("a")).with(Label.of("Test"))),
-                        node("a").link(to(node("b")).with(Label.of("Test"))),
-                        node("b").link(to(node("c")).with(Label.of("Test"))),
-                        node("b").link(to(node("a")).with(Label.of("Test 1"))),
-                        node("d").with(Shape.DOUBLE_CIRCLE).link(to(node("c")).with(Label.of("Test")))
-                );
-        Graphviz.fromGraph(g).height(400).render(Format.PNG).toFile(new File("example/ex1.png"));
+        Node
+                node4 = node("").with(Shape.POINT).link(to(node("a")).with(Label.of("Test"))),
+                node0 = node("a").link(to(node("b")).with(Label.of("Test"))),
+                node1 = node("b").link(to(node("c")).with(Label.of("Test"))),
+                node2 = node("b").link(to(node("a")).with(Label.of("Test"))),
+                node3 = node("d").with(Shape.DOUBLE_CIRCLE).link(to(node("c")).with(Label.of("Test")));
+        ArrayList<Node> nodes= new ArrayList<>();
+        nodes.add(node0);
+        nodes.add(node1);
+        nodes.add(node2);
+        nodes.add(node3);
+        nodes.add(node4);
+        Graph g = graph("example2").directed()
+                .graphAttr().with(RankDir.LEFT_TO_RIGHT);
+        for (Node node : nodes){
+            g = g.with(node);
+        }
+        File tmpImage = File.createTempFile("tmp", ".png", new File("images/"));
+        Graphviz.fromGraph(g).height(1000).render(Format.PNG).toFile(tmpImage);
+        Desktop desktop = Desktop.getDesktop();
+        desktop.open(tmpImage);
+        tmpImage.deleteOnExit();
     }
 
 
