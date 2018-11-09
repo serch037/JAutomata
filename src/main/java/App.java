@@ -55,7 +55,7 @@ public class App {
         Graphviz.fromGraph(g1).height(1000).render(Format.PNG).toFile(tmpImage);
         Desktop desktop = Desktop.getDesktop();
         desktop.open(tmpImage);
-        tmpImage.deleteOnExit();
+        //tmpImage.deleteOnExit();
     }
 
 

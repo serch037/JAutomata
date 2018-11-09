@@ -1,5 +1,6 @@
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.RankDir;
+import guru.nidi.graphviz.attribute.Shape;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.*;
@@ -78,7 +79,7 @@ public class Automaton {
         Graphviz.fromGraph(graph).height(1000).render(Format.PNG).toFile(tmpImage);
         Desktop desktop = Desktop.getDesktop();
         desktop.open(tmpImage);
-        tmpImage.deleteOnExit();
+        //tmpImage.deleteOnExit();
     }
 
     //node("a").link(to(node("b")).with(Label.of("Test"))),
@@ -97,7 +98,7 @@ public class Automaton {
     public List<MutableNode> getNodes() {
         Map<String, MutableNode> nodes = new HashMap<>();
         transitions.entrySet().stream().forEach(c -> {
-            System.out.println("1: "+c);
+//            System.out.println("1: "+c);
             getNodes(c.getKey(), nodes);
         });
         return new ArrayList<>(nodes.values());
@@ -115,14 +116,21 @@ public class Automaton {
     public void getNodes(String from, Character input, Set<String> states, Map<String, MutableNode> nodes) {
         System.out.printf("3: %s %s %s\n", from, input, states);
         nodes.putIfAbsent(from, mutNode(from));
+        if (from.equals(this.initialState)){
+            MutableNode init = mutNode("").add(Shape.POINT).addLink(nodes.get(from));
+            nodes.putIfAbsent("", init);
+        }
+        if (this.finalStates.contains(from)) {
+            nodes.get(from).add(Shape.DOUBLE_CIRCLE);
+        }
         states.stream().filter(to -> !to.equals(emptySymbol)).forEach(to -> {
             // Find before inserting
             Optional<Link> tmp = nodes.get(from).links().stream().filter(l -> {
-                Boolean p = l.asLinkSource().toString().contains(to);
+                Boolean p = l.asLinkSource().toString().equals(to);
                 return p;
             }).findAny();
             if (tmp.isPresent()) {
-                String label = (String) tmp.get().attrs().get("label").toString();
+                String label = tmp.get().attrs().get("label").toString();
                 tmp.get().attrs().add("label",label+","+input );
             }else {
                 nodes.get(from).addLink(to(node(to)).with(Label.of("" + input)));
@@ -159,7 +167,7 @@ public class Automaton {
         //test.parseTransitionFunctions(fs);
         test.parseTransitionFunctionsRegex(fs);
         //System.out.println("Done");
-        test.viewAutomaton();
+//        test.viewAutomaton();
         Automaton DFA = test.toDFA();
         DFA.viewAutomaton();
     }
