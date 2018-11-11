@@ -15,10 +15,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.*;
+import java.awt.event.*;  
+
 import static guru.nidi.graphviz.model.Factory.*;
 
 
-public class Automaton {
+public class Automaton{
 
     static Scanner scanner = new Scanner(System.in);
     String emptySymbol = "_";
@@ -140,36 +143,120 @@ public class Automaton {
 //        nodes.get(from).addLink(states.stream().filter(c -> !c.equals(emptySymbol)).toArray(String[]::new));
     }
 
+
+
     public static void main(String[] args) throws IOException {
+        //Input GUI set up
+        JFrame frame = new JFrame("Automaton GUI");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500,200);
+        //center middle of the window
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+
+        JLabel label1 = new JLabel("Enter transition (a 0 b)");
+        JTextField txtfield1 = new JTextField(6);
+        JButton addBtn = new JButton("Add transition");
+        JButton endBtn = new JButton("Create Automaton");
+        //addBtn.addActionListener(this);
+        //endBtn.addActionListener(this);
+
+        panel1.add(label1);
+        panel1.add(txtfield1);
+        panel2.add(addBtn);
+        panel2.add(endBtn);
+
+        frame.getContentPane().add(BorderLayout.NORTH,panel1);
+        frame.getContentPane().add(BorderLayout.SOUTH,panel2);
+
+        frame.setVisible(true);
+
+
+
         Automaton test = new Automaton();
+
         //test.parseAlphabet("a b c d e f g");
-        String f1 = "->a 0 a";
-        String f2 = "->a 0 b";
-        String f3 = "->a 0 c";
-        String f4 = "->a 0 d";
-        String f5 = "->a 0 e";
-        String f6 = "->a 1 d";
-        String f7 = "->a 1 e";
 
-        String f8 = "b 0 c";
-        String f9 = "b 1 e";
+        //test 1
+        //String f1 = "->a 0 a";
+        //String f2 = "->a 0 b";
+        //String f3 = "->a 0 c";
+        //String f4 = "->a 0 d";
+        //String f5 = "->a 0 e";
+        //String f6 = "->a 1 d";
+        //String f7 = "->a 1 e";
+        //String f8 = "b 0 c";
+        //String f9 = "b 1 e";
+        //String f10 = "c 0 _";
+        //String f11 = "c 1 b";
+        //String f12 = "d 0 e";
+        //String f13 = "d 1 _";
+        //String f14 = "*e 0 _";
+        //String f15 = "*e 1 _";
+        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15};
+        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
 
-        String f10 = "c 0 _";
-        String f11 = "c 1 b";
+        //test 2 https://www.geeksforgeeks.org/theory-of-computation-conversion-from-nfa-to-dfa/
+        //String f1 = "->a 0 a";
+        //String f2 = "->a 1 a";
+        //String f3 = "->a 0 b";
+        //String f4 = "b 1 c";
+        //String f5 = "*c 0 _";
+        //String f6 = "*c 1 _";
+        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6};
+        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
 
-        String f12 = "d 0 e";
-        String f13 = "d 1 _";
+        //No se si esta mal es parseo pero no sale
+        //test 3 https://er.yuvayana.org/nfa-to-dfa-conversion-algorithm-with-solved-example/
+        //String f1 = "->a 0 c";
+        //String f2 = "b 1 c";
+        //String f3 = "b 1 a";
+        //String f4 = "c 0 a";
+        //String f5 = "c 1 a";
+        //String f6 = "c 0 b";
+        //String f7 = "*c 0 _";
+        //String f8 = "*c 1 _";
+        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
 
-        String f14 = "*e 0 _";
-        String f15 = "*e 1 _";
-        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15};
-        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
-        //test.parseTransitionFunctions(fs);
-        test.parseTransitionFunctionsRegex(fs);
-        //System.out.println("Done");
-//        test.viewAutomaton();
-        Automaton DFA = test.toDFA();
-        DFA.viewAutomaton();
+        //No se puede probar con inicial = estado final
+        //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
+        //String f1 = "*->a 0 a";
+        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15};
+        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+
+        //List<String> fs = new ArrayList<>();
+        addBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String trn = "";
+                trn = txtfield1.getText();
+                System.out.println("Add transition pressed and read: "+trn);
+                fs.add(trn);
+            }
+        });
+
+        endBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent w) {
+                try {
+                    System.out.println("Create automaton");
+                    test.parseTransitionFunctionsRegex(fs);
+                    //test.viewAutomaton();
+                    Automaton DFA = test.toDFA();
+                    DFA.viewAutomaton();
+                }catch(IOException e) {
+                    System.out.println("IOException");
+                }
+            }
+        });
+
+        ////test.parseTransitionFunctions(fs);
+        //test.parseTransitionFunctionsRegex(fs);
+        ////System.out.println("Done");
+        ////test.viewAutomaton();
+        //Automaton DFA = test.toDFA();
+        //DFA.viewAutomaton();
     }
-
 }
+
