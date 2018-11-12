@@ -179,7 +179,6 @@ public class Automaton{
 
         frame.setVisible(true);
 
-         List<String> fs = new ArrayList<>();
          addBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String trn = "";
