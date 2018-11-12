@@ -12,6 +12,7 @@ plugins {
 
     // Apply the application plugin to add support for building an application
     id 'application'
+    id 'edu.sc.seis.launch4j' version '2.4.4'
 }
 
 // Define the main class for the application
@@ -37,4 +38,8 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+}
+
+launch4j {
+    mainClassName = "Automaton"
 }

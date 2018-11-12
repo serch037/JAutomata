@@ -168,7 +168,7 @@ public class Automaton{
         */
 
         //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
-        /*
+
         String f1 = "->*0 a 1";
         String f2 = "0 a 2";
 
@@ -184,7 +184,6 @@ public class Automaton{
         String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
         //String[] tmp = new String[]{f1};
         List<String> fs = new ArrayList<>(Arrays.asList(tmp));
-        */
 
 
 
