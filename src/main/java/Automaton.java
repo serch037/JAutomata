@@ -44,7 +44,7 @@ public class Automaton{
     }
 
     public void parseTransitionFunctionsRegex(List<String> lines) {
-        Pattern pattern = Pattern.compile("(->|\\*)?\\s*(\\w*)\\s*(\\w*)\\s*(\\w*)");
+        Pattern pattern = Pattern.compile("(->|\\*|->\\*|\\*->)?\\s*(\\w*)\\s*(\\w*)\\s*(\\w*)");
         for (String c : lines) {
             Matcher matcher = pattern.matcher(c);
             if (!matcher.matches()) continue;
@@ -60,6 +60,11 @@ public class Automaton{
                         this.initialState = fromState;
                         break;
                     case "*":
+                        this.finalStates.add(fromState);
+                        break;
+                    case "->*":
+                    case "*->":
+                        this.initialState = fromState;
                         this.finalStates.add(fromState);
                         break;
                 }
@@ -148,8 +153,8 @@ public class Automaton{
     public static void main(String[] args) throws IOException {
         Automaton test = new Automaton();
 
-        //No se si esta mal es parseo pero no sale
         //test 3 https://er.yuvayana.org/nfa-to-dfa-conversion-algorithm-with-solved-example/
+        /*
         String f1 = "->a 0 c";
         String f2 = "b 1 c";
         String f3 = "b 1 a";
@@ -160,18 +165,32 @@ public class Automaton{
         String f8 = "*c 1 _";
         String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
         List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        */
 
-        //No se puede probar con inicial = estado final
         //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
-        //String f1 = "*->a 0 a";
-        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15};
-        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        /*
+        String f1 = "->*0 a 1";
+        String f2 = "0 a 2";
+
+        String f3 = "*1 a 1";
+        String f4 = "*1 a 2";
+
+        String f5 = "2 b 1";
+        String f6 = "2 b 3";
+
+        String f7 = "3 a 1";
+        String f8 = "3 a 2";
+
+        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        //String[] tmp = new String[]{f1};
+        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        */
 
 
 
         test.parseTransitionFunctionsRegex(fs);
         System.out.println("Done");
-       // test.viewAutomaton();
+        test.viewAutomaton();
         Automaton DFA = test.toDFA();
         DFA.viewAutomaton();
     }

@@ -33,7 +33,7 @@ public class NFAToDFA {
             c.put(key, new HashSet<>());
             if (a.keySet().size() > 0 && a.containsKey(key))
                 c.get(key).addAll(a.getOrDefault(key, null));
-            if (b != null && b.get(key) != null)
+            if (b != null && b.containsKey(key))
                 c.get(key).addAll(b.getOrDefault(key, null));
         }
         return c;
