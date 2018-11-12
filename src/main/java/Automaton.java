@@ -152,55 +152,46 @@ public class Automaton{
 
     public static void main(String[] args) throws IOException {
         Automaton test = new Automaton();
-        //Input GUI set up
-        JFrame frame = new JFrame("Automaton GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500,200);
-        //center middle of the window
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        JPanel panel1 = new JPanel();
-        JPanel panel2 = new JPanel();
 
-        JLabel label1 = new JLabel("Enter transition (a 0 b)");
-        JTextField txtfield1 = new JTextField(6);
-        JButton addBtn = new JButton("Add transition");
-        JButton endBtn = new JButton("Create Automaton");
-        //addBtn.addActionListener(this);
-        //endBtn.addActionListener(this);
+        //test 3 https://er.yuvayana.org/nfa-to-dfa-conversion-algorithm-with-solved-example/
+        /*
+        String f1 = "->a 0 c";
+        String f2 = "b 1 c";
+        String f3 = "b 1 a";
+        String f4 = "c 0 a";
+        String f5 = "c 1 a";
+        String f6 = "c 0 b";
+        String f7 = "*c 0 _";
+        String f8 = "*c 1 _";
+        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        */
 
-        panel1.add(label1);
-        panel1.add(txtfield1);
-        panel2.add(addBtn);
-        panel2.add(endBtn);
+        //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
 
-        frame.getContentPane().add(BorderLayout.NORTH,panel1);
-        frame.getContentPane().add(BorderLayout.SOUTH,panel2);
+        String f1 = "->*0 a 1";
+        String f2 = "0 a 2";
 
-        frame.setVisible(true);
+        String f3 = "*1 a 1";
+        String f4 = "*1 a 2";
 
-         addBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String trn = "";
-                trn = txtfield1.getText();
-                System.out.println("Add transition pressed and read: "+trn);
-                fs.add(trn);
-            }
-        });
+        String f5 = "2 b 1";
+        String f6 = "2 b 3";
 
-        endBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent w) {
-                try {
-                    System.out.println("Create automaton");
-                    test.parseTransitionFunctionsRegex(fs);
-                    //test.viewAutomaton();
-                    Automaton DFA = test.toDFA();
-                    DFA.viewAutomaton();
-                }catch(IOException e) {
-                    System.out.println("IOException");
-                }
-            }
-        });
+        String f7 = "3 a 1";
+        String f8 = "3 a 2";
+
+        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        //String[] tmp = new String[]{f1};
+        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+
+
+
+        test.parseTransitionFunctionsRegex(fs);
+        System.out.println("Done");
+        test.viewAutomaton();
+        Automaton DFA = test.toDFA();
+        DFA.viewAutomaton();
     }
 }
 
