@@ -169,6 +169,7 @@ public class Automaton{
 
         //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
 
+        /*
         String f1 = "->*0 a 1";
         String f2 = "0 a 2";
 
@@ -184,7 +185,23 @@ public class Automaton{
         String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
         //String[] tmp = new String[]{f1};
         List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        */
 
+        String f1 = "->*q0 a q0";
+        String f2 = "->*q0 a q1";
+        String f3 = "->*q0 a q2";
+        String f4 = "->*q0 a q3";
+        String f5 = "->*q0 b q1";
+        String f6 = "q1 a q1";
+        String f7 = "q1 a q2";
+        String f8 = "*q2 a q2";
+        String f9 = "*q2 a q2";
+        String f10 = "*q2 a q2";
+        String f11 = "*q2 a q2";
+        String f12 = "*q2 a q2";
+        String f13 = "*q2 a q2";
+        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
 
 
         test.parseTransitionFunctionsRegex(fs);
