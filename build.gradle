@@ -13,6 +13,8 @@ plugins {
     // Apply the application plugin to add support for building an application
     id 'application'
     id 'edu.sc.seis.launch4j' version '2.4.4'
+
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
 
 // Define the main class for the application
@@ -31,6 +33,7 @@ dependencies {
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
+
 }
 
 // In this section you declare where to find the dependencies of your project
