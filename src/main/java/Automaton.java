@@ -154,18 +154,18 @@ public class Automaton{
         Automaton test = new Automaton();
 
         //test 3 https://er.yuvayana.org/nfa-to-dfa-conversion-algorithm-with-solved-example/
-        /*
-        String f1 = "->a 0 c";
-        String f2 = "b 1 c";
-        String f3 = "b 1 a";
-        String f4 = "c 0 a";
-        String f5 = "c 1 a";
-        String f6 = "c 0 b";
-        String f7 = "*c 0 _";
-        String f8 = "*c 1 _";
-        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
-        List<String> fs = new ArrayList<>(Arrays.asList(tmp));
-        */
+        
+        //String f1 = "->a 0 c";
+        //String f2 = "b 1 c";
+        //String f3 = "b 1 a";
+        //String f4 = "c 0 a";
+        //String f5 = "c 1 a";
+        //String f6 = "c 0 b";
+        //String f7 = "*c 0 _";
+        //String f8 = "*c 1 _";
+        //String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        //List<String> fs = new ArrayList<>(Arrays.asList(tmp));
+        
 
         //test 4 https://www.cs.odu.edu/~toida/nerzic/390teched/regular/fa/nfa-2-dfa.html
 
@@ -195,12 +195,12 @@ public class Automaton{
         String f6 = "q1 a q1";
         String f7 = "q1 a q2";
         String f8 = "*q2 a q2";
-        String f9 = "*q2 a q2";
-        String f10 = "*q2 a q2";
-        String f11 = "*q2 a q2";
-        String f12 = "*q2 a q2";
-        String f13 = "*q2 a q2";
-        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8};
+        String f9 = "*q2 a q1";
+        String f10 = "q3 a q0";
+        String f11 = "q3 a q1";
+        String f12 = "q3 a q2";
+        String f13 = "q3 a q3";
+        String[] tmp = new String[]{f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13};
         List<String> fs = new ArrayList<>(Arrays.asList(tmp));
 
 
